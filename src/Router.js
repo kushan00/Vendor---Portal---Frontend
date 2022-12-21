@@ -1,6 +1,9 @@
 import { useContext , useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
+import LandingPage from "./components/layouts/LandingPage";
+import Register from "./components/auth/Register";
+import Login from "./components/auth/Login";
 
 const SiteRouter = () => {
 
@@ -12,7 +15,7 @@ const SiteRouter = () => {
                 <Route path="/register" element={<Register/>}/>
                 <Route path="/login" element={<Login/>}/>
             </Routes>
-		</Router>
+		    </Router>
     </div>
   );
 }

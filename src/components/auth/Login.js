@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { LoginUsers } from "../../services/AuthServices.js";
 import Swal from 'sweetalert2';
 import "./responsive.css";
-import { AuthContextProvider } from "../context/Auth.context.js";
+
 
 const Login = () => {
 

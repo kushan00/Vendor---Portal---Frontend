@@ -11,7 +11,7 @@ const LandingPage = () => {
     <div>
 
     <center>
-      <div class="row  m-0" style={{padding:"50px", display:Token == undefined ? "flex" : "none"}}>
+      <div class="row  m-0" style={{padding:"50px", display:"flex"}}>
       <div class="col">
         <Link to="/register" >
                 <button className="btn btn-dark" style={{ width:"500px", height:"70px", fontSize:"20px"}}>JOIN WITH US</button>
