@@ -3,6 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { LoginUsers } from "../../services/AuthServices.js";
 import Swal from 'sweetalert2';
 import "./responsive.css";
+import { useDispatch } from "react-redux";
+import  { setToken }  from "../../Redux/AuthSlice.js";
 
 
 const Login = () => {
@@ -19,6 +21,8 @@ const Login = () => {
 	const onChange = (e) =>
 		setFormData({ ...formData, [e.target.name]: e.target.value });
 
+	const dispatch = useDispatch();
+
 	const onSubmit = async (e) => {
 
 		e.preventDefault();
@@ -30,10 +34,12 @@ const Login = () => {
         localStorage.setItem("token",data?.data?.data?.token);
         localStorage.setItem("userRole",data?.data?.data?.userRole);
         localStorage.setItem("user",data?.data?.data?.user);
-        localStorage.setItem("userID",data?.data?.data?.userID);
-        localStorage.setItem("_id",data?.data?.data?._id);
-        navigate("/");
-		window.location.reload();
+        // localStorage.setItem("userID",data?.data?.data?.userID);
+        // localStorage.setItem("_id",data?.data?.data?._id);
+		console.log(data?.data?.data?.token);
+		dispatch(setToken(data?.data?.data?.token));
+        //navigate("/Home");
+		//window.location.reload();
         }
         else
         {
@@ -90,10 +96,10 @@ const Login = () => {
                 />
 			</form>
             <br/>
-			<p className="lead">
-				Create new account?&nbsp;&nbsp;<Link to="/register" style={{color:"green" , textDecoration:"none"}}>Sign Up</Link>
+			{/* <p className="lead">
+				Create new account?&nbsp;&nbsp;<Link to="/register" style={{color:"#001EB9" , textDecoration:"none"}}>Sign Up</Link>
 				<br></br>
-			</p>
+			</p> */}
 			</center>
 		</div>
 	);

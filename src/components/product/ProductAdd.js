@@ -21,7 +21,7 @@ import {
 } from "reactstrap";
 import moment from "moment/moment";
 import axios from "axios";
-
+import { AddNewProduct } from "../../services/ProductServices";
 
 const ProductAdd = () => {
 
@@ -33,7 +33,7 @@ const [productDescription, setproductDescription] = useState('no description');
 
 console.log(image)
 
-const handleSubmit = () => {
+const handleSubmit = async () => {
 
   let formData = new FormData()
   formData.append('SKU', SKU);
@@ -44,8 +44,7 @@ const handleSubmit = () => {
     formData.append('products', item)
   });
   console.log("sending data set ",formData);
-  const url = 'http://localhost:5000/vendor-portal/product/add'
-  axios.post(url, formData).then(result => {
+  await AddNewProduct(formData).then(result => {
     console.log("result",result)
     if(result.data.status === 1)
     {

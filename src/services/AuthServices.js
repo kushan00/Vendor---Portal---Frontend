@@ -2,10 +2,10 @@ import axios from "axios";
 
 import StartUrl from "../configs/Url.json";
 
-const LoginURL = StartUrl?.StartUrl + "/gym/signin";
-const RegisterURL = StartUrl?.StartUrl + "/gym/signup";
-const AuthURL = StartUrl?.StartUrl + "/gym/auth";
-const UpdateAdminURL = StartUrl?.StartUrl + "/gym/update-admin/";
+const LoginURL = StartUrl?.StartUrl + "/vendor-portal/signin";
+const RegisterURL = StartUrl?.StartUrl + "/vendor-portal/signup";
+const AuthURL = StartUrl?.StartUrl + "/vendor-portal/auth";
+const UpdateAdminURL = StartUrl?.StartUrl + "/vendor-portal/update-admin/";
 
 export async function LoginUsers(data){
     const alldata = {
