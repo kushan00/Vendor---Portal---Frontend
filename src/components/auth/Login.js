@@ -34,12 +34,10 @@ const Login = () => {
         localStorage.setItem("token",data?.data?.data?.token);
         localStorage.setItem("userRole",data?.data?.data?.userRole);
         localStorage.setItem("user",data?.data?.data?.user);
-        // localStorage.setItem("userID",data?.data?.data?.userID);
-        // localStorage.setItem("_id",data?.data?.data?._id);
 		console.log(data?.data?.data?.token);
 		dispatch(setToken(data?.data?.data?.token));
-        //navigate("/Home");
-		//window.location.reload();
+        // navigate("/");
+		// window.location.reload();
         }
         else
         {

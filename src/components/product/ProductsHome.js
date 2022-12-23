@@ -1,5 +1,5 @@
 import React ,{useState,useEffect} from 'react';
-import { GetAllProductDetails } from '../../services/ProductServices';
+import { GetAllProductDetails ,DeleteProduct } from '../../services/ProductServices';
 import DataTable from "react-data-table-component";
 import {
    Badge,
@@ -18,7 +18,6 @@ import {
    Col
 } from "reactstrap";
 import moment from 'moment';
-import image from "../../assets/images/1671715940637-Screenshot (1).png";
 import { useNavigate , Link} from "react-router-dom";
 
 const ProductHome = () => {
@@ -47,9 +46,38 @@ const ProductHome = () => {
     navigate("/search/"+ searchTextItem);
  }
 
+ const [deleteID, setdeleteID] = useState("");
+ const [openDeleteModal, setopenDeleteModal] = useState(false);
+
+ const openDeleteModel = (id)=>{
+    console.log("id",id);
+    setdeleteID(id);
+    setopenDeleteModal(true);
+ }
+
+ const deleteProductItem = async () => {
+    const data = await DeleteProduct(deleteID);
+   
+    if(data?.data?.status == 1)
+    {
+        alert("delete Success");
+        setopenDeleteModal(false);
+        getAllproducts();
+    }
+    else
+    {
+        alert("delete Failed");
+        setopenDeleteModal(false);
+    }
+    console.log("data",data);
+ }
+
  useEffect(()=>{
     getAllproducts();
  },[])
+
+
+
 
  
  const columns = [
@@ -67,7 +95,7 @@ const ProductHome = () => {
       selector: "SKU",
       cell: (data) => (
           <div style={{ display: "flex", flexDirection: "column" }}>
-              <img src={image} style={{width:"30%" , height:"30%" , margin:"5px"}} />              
+              <img src={data?.images[0]?.filename} style={{width:"30%" , height:"30%" , margin:"5px"}} />              
           </div>
       ),
    },
@@ -94,15 +122,15 @@ const ProductHome = () => {
 
            <div className="row">
                <div className="col">
-                   <a onClick={() => {}}><i class="fa-solid fa-trash" style={{ fontSize: "20px",color:"#001EB9" }}></i></a> 
+                   <a onClick={() => {openDeleteModel(data?._id)}}><i class="fa-solid fa-trash" style={{ fontSize: "20px",color:"#001EB9" }}></i></a> 
                </div>               
                &nbsp;&nbsp;&nbsp;&nbsp;
                <div className="col">
-               <a onClick={(e)=>{}}><i class="fa-sharp fa-solid fa-pen" style={{ fontSize: "20px",color:"#001EB9" }}></i></a>
+               <a href={"/update/" + data?._id}><i class="fa-sharp fa-solid fa-pen" style={{ fontSize: "20px",color:"#001EB9" }}></i></a>
                </div>
                &nbsp;&nbsp;&nbsp;&nbsp;
                <div className="col">
-               <a onClick={(e)=>{}}><i class="fa-regular fa-star" style={{ fontSize: "20px",color:"#001EB9" }}></i> <i class="fa-solid fa-star" style={{ fontSize: "20px",color:"#001EB9" }}></i></a>
+               <a onClick={(e)=>{alert("Added To Favourites..!")}}><i class="fa-regular fa-star" style={{ fontSize: "20px",color:"#001EB9" }}></i></a>
                </div>
            </div>
  
@@ -184,6 +212,42 @@ const ProductHome = () => {
             columns={columns}
             progressPending={loading}
          />
+
+        <div>
+        <Modal
+          isOpen={openDeleteModal}
+          className="modal-dialog-centered"
+          fade={true}
+          backdrop={true}
+        >
+          <ModalHeader toggle={() => setopenDeleteModal(false)}>
+          </ModalHeader>
+          <ModalBody>
+            <div>
+                <center>
+                    <i class="fa-sharp fa-solid fa-circle-exclamation" style={{fontSize:"50px" , color:"red"}}></i>
+                    <br/><br/>
+                    <h3 style={{fontSize:"25px"}}>ARE YOU SURE ?</h3>
+                    <b style={{fontSize:"16px"}}>You will not be able to undo this action if you proceed!.</b>
+                </center>
+            </div>
+            <br/>
+            <center>
+                <div>
+                <Button className="btn btn-light" style={{backgroundColor:"#FFFFFF",borderColor:"#001EB9" , borderWidth:"3px" , marginRight:"40px"}} onClick={() => setopenDeleteModal(false)}>
+                <b style={{ color:"black" }}>Cancel</b>
+                </Button>
+
+                <Button className="btn btn-light" style={{backgroundColor:"#001EB9" }} onClick={(e) => deleteProductItem(e)}>
+                    <span style={{color:'white' , marginLeft:"10px", marginRight:"10px"}}>Delete</span>
+                </Button>
+            </div>
+            </center>
+            
+          </ModalBody>
+        </Modal>
+        </div>
+
     </>
   );
 }

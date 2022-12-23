@@ -1,33 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
-  Badge,
   Card,
-  CardHeader,
-  CardTitle,
   CardBody,
-  Label,
   Button,
-  Modal,
-  ModalHeader,
-  ModalBody,
   Input,
   Form,
-  Row,
-  Col,
-  CardImg,
-  Container,
-  CardText,
+
 } from "reactstrap";
-import moment from "moment/moment";
-import axios from "axios";
-import { AddNewProduct } from "../../services/ProductServices";
+import { updateProduct , GetOneProductDetails } from "../../services/ProductServices";
 
-const ProductAdd = () => {
+const EditProduct = () => {
 
-  const navigate = useNavigate();
+const navigate = useNavigate();
+const id = useParams();
 
 const [image, setImage] = useState([]);
+const [allImages, setallImages] = useState([]);
 const [SKU, setSKU] = useState('');
 const [quantity, setquantity] = useState('');
 const [productName, setproductName] = useState('');
@@ -47,10 +36,24 @@ const onChangeproductDescription = (e) => {
   setproductDescription(e.target.value);
 }
 
-console.log(image)
+const getSelectedProduct = async ()=>{
+    const data = await GetOneProductDetails(id.id);
+    if(data?.data?.status == 1)
+    {
+        setSKU(data?.data?.data?.data?.SKU);
+        setquantity(data?.data?.data?.data?.quantity);
+        setproductName(data?.data?.data?.data?.productName);
+        setproductDescription(data?.data?.data?.data?.productDescription);
+        setallImages(data?.data?.data?.data?.images);
+    }
+}
+
+useEffect(() => {
+    getSelectedProduct();
+}, []);
+
 
 const handleSubmit = async () => {
-
   let formData = new FormData()
   formData.append('SKU', SKU);
   formData.append('quantity', quantity);
@@ -60,16 +63,16 @@ const handleSubmit = async () => {
     formData.append('products', item)
   });
   console.log("sending data set ",formData);
-  await AddNewProduct(formData).then(result => {
+  await updateProduct(id.id,formData).then(result => {
     console.log("result",result)
     if(result.data.status === 1)
     {
-      alert('Product Added Successfully');
+      alert('Product Updated Successfully');
       navigate("/");
     }
     else
     {
-      alert('Product Not Added');
+      alert('Product Not Updated');
       window.location.reload();
     }
   }).catch(err => {
@@ -80,7 +83,7 @@ const handleSubmit = async () => {
   return (
     <div style={{margin:"100px"}}>
         
-        <h1 style={{marginLeft:"10px"}}>PRODUCTS {">"} <label style={{color:"#001EB9" , fontSize:"20px"}}>Add new product</label></h1>
+        <h1 style={{marginLeft:"10px"}}>PRODUCTS {">"} <label style={{color:"#001EB9" , fontSize:"20px"}}>Edit product</label></h1>
         <br/><br/>
      
  
@@ -89,8 +92,8 @@ const handleSubmit = async () => {
                     <Card>
                     <CardBody>
                         <div style={{ width: "600px" }}>
-                        <Form className="form">
-				                  <div className="form-group">
+                        <Form className="form" >
+				        <div className="form-group">
                             <input
                                 id='responsiveProfile'
                                 className="form-control"
@@ -156,12 +159,36 @@ const handleSubmit = async () => {
                                     )
                                   })
                                 }
+                                <br/>
+                                {
+                                    allImages.length > 0 ? 
+                                    <div>
+                                    <label style={{ padding: '10px' ,  color:"blue"}}>Selected Images</label>
+                                    <br/>
+                                    {
+                                        allImages.map((item,index) => {
+                                            return (
+                                                <span>
+                                                    <img 
+                                                    key={index}
+                                                    style={{ padding: '10px' ,  borderRadius:"10px"}}
+                                                    width={120} height={120}
+                                                    src={item?.filename}
+                                                    />
+                                                </span>
+                                        );
+                                        })
+                                    }
+                                    </div>
+                                    : 
+                                    null
+                                }
                         </div>
                             <br />
                             <Button
                             className="btn btn-success"
-                            color="success"
-                            onClick={() => handleSubmit()}
+                            color="success" 
+                            onClick={() => handleSubmit()}                        
                             >
                             Submit
                             </Button>
@@ -181,4 +208,4 @@ const handleSubmit = async () => {
   );
 };
 
-export default ProductAdd;
+export default EditProduct;

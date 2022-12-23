@@ -102,7 +102,7 @@ export async function updateProduct(id,data) {
 
   }
   
-export async function DeleteUser(id){
+export async function DeleteProduct(id){
     return await axios.delete(DeleteProductUrl+id);
   }
 
